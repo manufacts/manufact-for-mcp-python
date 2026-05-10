@@ -5,6 +5,8 @@ description = "Smoke-test fixture for repo framework detection (Python MCP SDK).
 requires-python = ">=3.11"
 dependencies = [
     "mcp[cli]>=1.0.0",
+    "uvicorn>=0.30.0",
+    "starlette>=0.40.0",
 ]
 
 [build-system]
