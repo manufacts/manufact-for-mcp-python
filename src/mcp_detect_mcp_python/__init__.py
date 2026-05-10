@@ -1,12 +1,58 @@
-"""Minimal `mcp` (official Python SDK) fixture exposing tools + a widget tool."""
+"""Minimal `mcp` (official Python SDK) fixture exposing tools + an MCP App view.
+
+Follows the recommended MCP Apps protocol pattern from the say-server example:
+- ``@mcp.tool(meta={"ui": {"resourceUri": VIEW_URI}})`` on the widget tool
+- ``@mcp.resource(uri, mime_type="text/html;profile=mcp-app")`` for the View
+"""
+
+from typing import TypedDict
 
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
-from mcp.types import EmbeddedResource, TextContent, TextResourceContents
-from pydantic import AnyUrl
 
-# Disable DNS-rebinding protection so the fixture is reachable behind any
-# proxy host (Fly, Cloudflare, etc.).
+
+class GreetProps(TypedDict):
+    """Structured payload sent to the View as ``structuredContent``."""
+
+    name: str
+
+
+VIEW_URI = "ui://mcp-detect-mcp-python/greet.html"
+RESOURCE_MIME_TYPE = "text/html;profile=mcp-app"
+
+# Self-contained MCP Apps view. Loads the ext-apps app-bridge from esm.sh and
+# renders the latest tool result.
+VIEW_HTML = """<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Greet</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font:16px/1.4 system-ui, sans-serif; padding: 24px; margin: 0; }
+    h1 { margin: 0 0 8px; }
+    .meta { color: #666; font-size: 13px; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <h1 id="greeting">Greeting view loaded.</h1>
+  <p id="hint" class="meta">Call the <code>greet_widget</code> tool to populate this view.</p>
+  <script type="module">
+    import { App } from "https://esm.sh/@modelcontextprotocol/ext-apps@1";
+    const app = new App({ name: "mcp-detect-mcp-python-greet", version: "0.1.0" });
+    app.ontoolresult = (result) => {
+      const text = (result?.content ?? []).find((c) => c.type === "text")?.text;
+      const struct = result?.structuredContent;
+      const heading = document.getElementById("greeting");
+      const hint = document.getElementById("hint");
+      if (text) heading.textContent = text;
+      if (struct && struct.name) hint.textContent = "props.name = " + struct.name;
+    };
+    app.connect();
+  </script>
+</body>
+</html>"""
+
 server: FastMCP = FastMCP(
     "mcp-detect-mcp-python",
     transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=False),
@@ -22,27 +68,26 @@ def echo(text: str) -> str:
 
 @server.tool(
     name="greet_widget",
-    description="Greet someone and return an HTML widget rendered by the MCP client.",
+    description="Greet someone and render an MCP App view.",
+    meta={
+        "ui": {"resourceUri": VIEW_URI},
+        "ui/resourceUri": VIEW_URI,
+    },
 )
-def greet_widget(name: str) -> list[TextContent | EmbeddedResource]:
-    """Return a textual greeting plus an embedded HTML UI resource."""
-    html = (
-        '<!doctype html><html><body style="font:16px/1.4 system-ui;padding:24px">'
-        f'<h1 style="margin:0 0 8px">Hello, {name}!</h1>'
-        '<p style="color:#555">Greeting widget served by mcp-detect-mcp-python.</p>'
-        '</body></html>'
-    )
-    return [
-        TextContent(type="text", text=f"Hello, {name}!"),
-        EmbeddedResource(
-            type="resource",
-            resource=TextResourceContents(
-                uri=AnyUrl(f"ui://greet/{name}"),
-                mimeType="text/html",
-                text=html,
-            ),
-        ),
-    ]
+def greet_widget(name: str) -> GreetProps:
+    """Return structuredContent the MCP Apps View renders."""
+    return {"name": name}
+
+
+@server.resource(
+    VIEW_URI,
+    name="Greet view",
+    description="MCP Apps view for the greet_widget tool.",
+    mime_type=RESOURCE_MIME_TYPE,
+)
+def greet_view() -> str:
+    """Serve the View HTML at VIEW_URI."""
+    return VIEW_HTML
 
 
 # Streamable-HTTP ASGI app (mounted at /mcp by FastMCP).
