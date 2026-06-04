@@ -55,6 +55,7 @@ VIEW_HTML = """<!doctype html>
 
 server: FastMCP = FastMCP(
     "mcp-detect-mcp-python",
+    instructions="Smoke-test fixture for official MCP Python SDK framework detection (MCP Apps).",
     transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=False),
     stateless_http=True,
 )
