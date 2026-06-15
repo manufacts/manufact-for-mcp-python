@@ -1,4 +1,4 @@
-[![Deploy to mcp-use](https://cdn.mcp-use.com/deploy.svg)](https://mcp-use.com/deploy/start?repository-url=https%3A%2F%2Fgithub.com%2Fmanufacts%2Fmcp-detect-mcp-python&branch=main&project-name=mcp-detect-mcp-python&port=8000&start-command=uvicorn+%27mcp_detect_mcp_python%3Aapp%27+--host+0.0.0.0+--port+8000&runtime=python&base-image=python%3A3.12)
+[![Deploy to mcp-use](https://cdn.mcp-use.com/deploy.svg)](https://mcp-use.com/deploy/start?repository-url=https%3A%2F%2Fgithub.com%2Fmanufacts%2Fmanufact-for-mcp-python&branch=main&project-name=manufact-for-mcp-python&port=8000&start-command=uvicorn+%27mcp_detect_mcp_python%3Aapp%27+--host+0.0.0.0+--port+8000&runtime=python&base-image=python%3A3.12)
 
 <div align="center">
 
@@ -16,7 +16,7 @@ Built with the official [`mcp`](https://github.com/modelcontextprotocol/python-s
 
 ## Deploy to Manufact Cloud
 
-Click the badge above, or open the [one-click deploy flow](https://mcp-use.com/deploy/start?repository-url=https%3A%2F%2Fgithub.com%2Fmanufacts%2Fmcp-detect-mcp-python&branch=main&project-name=mcp-detect-mcp-python&port=8000&start-command=uvicorn+%27mcp_detect_mcp_python%3Aapp%27+--host+0.0.0.0+--port+8000&runtime=python&base-image=python%3A3.12). Sign in, connect GitHub, and Manufact clones this repo into your account and deploys it.
+Click the badge above, or open the [one-click deploy flow](https://mcp-use.com/deploy/start?repository-url=https%3A%2F%2Fgithub.com%2Fmanufacts%2Fmanufact-for-mcp-python&branch=main&project-name=manufact-for-mcp-python&port=8000&start-command=uvicorn+%27mcp_detect_mcp_python%3Aapp%27+--host+0.0.0.0+--port+8000&runtime=python&base-image=python%3A3.12). Sign in, connect GitHub, and Manufact clones this repo into your account and deploys it.
 
 If you deploy manually from the dashboard instead:
 
