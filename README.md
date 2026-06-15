@@ -8,7 +8,7 @@
 
 Built with the official [`mcp`](https://github.com/modelcontextprotocol/python-sdk) Python SDK (`FastMCP`).
 
-**Live demo:** [`bold-forge-w0fwk.run.mcp-use.com/mcp`](https://bold-forge-w0fwk.run.mcp-use.com/mcp)
+**Live demo:** [`wild-pulse-opk28.run.mcp-use.com/mcp`](https://wild-pulse-opk28.run.mcp-use.com/mcp)
 
 </div>
 
